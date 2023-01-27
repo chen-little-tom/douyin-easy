@@ -1,0 +1,25 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/test/demo": {
+            "get": {
+                "description": "测试接口",
+                "tags": [
+                    "测试模块"
+                ],
+                "summary": "测试",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "objects"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

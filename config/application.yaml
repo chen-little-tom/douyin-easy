@@ -1,0 +1,15 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+database:
+  host: 43.138.127.168
+  dbname: douyin-easy
+  port: 3306
+  username: root
+  password: 123456
+redis:
+  host: 43.138.127.168
+  port: 6379
+  username:
+  password: 123456
+  db: 1

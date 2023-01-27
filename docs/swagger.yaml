@@ -1,0 +1,15 @@
+info:
+  contact: {}
+paths:
+  /test/demo:
+    get:
+      description: 测试接口
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: objects
+      summary: 测试
+      tags:
+      - 测试模块
+swagger: "2.0"
