@@ -20,7 +20,7 @@ type Model struct {
 
 var DB *gorm.DB
 
-func init() {
+func InitDB() {
 	app := config.GlobalConfig
 	host, port, dbname := app.Database.Host, app.Database.Port, app.Database.Dbname
 	username, password := app.Database.Username, app.Database.Password
