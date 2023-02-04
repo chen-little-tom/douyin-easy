@@ -1,4 +1,4 @@
-package redis_cache
+package cache
 
 import (
 	"douyin-easy/config"

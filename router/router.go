@@ -1,14 +1,25 @@
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"douyin-easy/mdw"
+	"douyin-easy/utils"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 var Router *gin.Engine
 
 func init() {
 
 	router := gin.Default()
+	// 设置跨域
+	router.Use(mdw.Cors())
+	// 设置静态路由
+	router.StaticFS("/public", http.Dir(utils.StaticRoot))
 	// 此处配置路由
-	initTest(router)
+
+	initUser(router)
+	initFeed(router)
 
 	Router = router
 }

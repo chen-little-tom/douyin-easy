@@ -1,15 +1,121 @@
+definitions:
+  api.UserDetailResponse:
+    properties:
+      status_code:
+        type: integer
+      status_msg:
+        type: string
+      user:
+        $ref: '#/definitions/vo.UserVo'
+    type: object
+  api.UserLoginResponse:
+    properties:
+      status_code:
+        type: integer
+      status_msg:
+        type: string
+      token:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  vo.UserVo:
+    properties:
+      follow_count:
+        description: 关注总数
+        type: integer
+      follower_count:
+        description: 粉丝总数
+        type: integer
+      id:
+        description: 用户id
+        type: integer
+      is_follow:
+        description: 是否关注
+        type: boolean
+      name:
+        description: 用户名称
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /test/demo:
+  /douyin/user/:
     get:
-      description: 测试接口
+      consumes:
+      - application/json
+      description: 用户详情
+      parameters:
+      - description: 用户id
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: objects
-      summary: 测试
+            $ref: '#/definitions/api.UserDetailResponse'
+      summary: 用户详情
       tags:
-      - 测试模块
+      - 基础模块
+  /douyin/user/login/:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录
+      parameters:
+      - description: 用户名
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.UserLoginResponse'
+      summary: 用户登录
+      tags:
+      - 基础模块
+  /douyin/user/register/:
+    post:
+      consumes:
+      - application/json
+      description: 注册用户
+      parameters:
+      - description: 用户名
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.UserLoginResponse'
+      summary: 用户注册
+      tags:
+      - 基础模块
 swagger: "2.0"
