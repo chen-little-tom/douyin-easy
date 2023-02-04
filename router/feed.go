@@ -6,6 +6,7 @@ import (
 )
 
 func initFeed(r *gin.Engine) {
+	r.GET("/douyin/feed", api.FeedApi.Feed)
 	publish := r.Group("/douyin/publish")
 	publish.POST("/action/", api.FeedApi.Publish)
 }

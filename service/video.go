@@ -81,8 +81,8 @@ func (vs videoService) Add(c *gin.Context) error {
 	return nil
 }
 
-// List 获取视频流
-func (vs videoService) List(lastTime time.Time, loginUser model.User) ([]vo.VideoVo, time.Time, error) {
+// Feed 获取视频流
+func (vs videoService) Feed(lastTime time.Time, token string) ([]vo.VideoVo, time.Time, error) {
 	ret := make([]vo.VideoVo, 10)
 	nextTime := time.Now()
 	videos, err := model.VideoModel.ListByTime(lastTime)
@@ -99,6 +99,10 @@ func (vs videoService) List(lastTime time.Time, loginUser model.User) ([]vo.Vide
 	fileIds := make([]uint64, len(videos)*2)
 
 	fileMap, err := FileService.ListByIdsMap(fileIds)
+	if err != nil {
+		return ret, nextTime, err
+	}
+	loginUser, err := UserService.GetLoginUser(token)
 	if err != nil {
 		return ret, nextTime, err
 	}
