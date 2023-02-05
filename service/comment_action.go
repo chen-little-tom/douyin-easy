@@ -14,10 +14,10 @@ type User struct {
 }
 
 type CommentActionResponse struct {
-	Id         uint64    `json:"id"`
-	User       *User     `json:"user"`
-	Content    string    `json:"content"`
-	CreateDate time.Time `json:"create_date"`
+	Id         uint64 `json:"id"`
+	User       *User  `json:"user"`
+	Content    string `json:"content"`
+	CreateDate string `json:"create_date"`
 }
 
 func PostComment(fatherId, toUserId, videoId, fromUserId uint64, content string) (*CommentActionResponse, error) {
@@ -37,7 +37,7 @@ func PostComment(fatherId, toUserId, videoId, fromUserId uint64, content string)
 	userDB, _ := model.UserModel.Detail(fromUserId)
 	isFollow, _ := model.FollowModel{}.QueryIsFollow(fromUserId, toUserId)
 	user.Id, user.Name, user.FollowCount, user.FollowerCount, user.IsFollow = userDB.Id, userDB.Username, userDB.FollowCount, userDB.FansCount, isFollow
-	return &CommentActionResponse{Id: comment.Id, User: &user, Content: comment.Content, CreateDate: comment.CreateAt}, nil
+	return &CommentActionResponse{Id: comment.Id, User: &user, Content: comment.Content, CreateDate: comment.CreateAt.Format("2006.01.02 15:04:05")}, nil
 }
 
 func DeleteComment(commentId, videoId, fromUserId, toUserId uint64) (*CommentActionResponse, error) {
@@ -60,5 +60,5 @@ func DeleteComment(commentId, videoId, fromUserId, toUserId uint64) (*CommentAct
 	isFollow, _ := model.FollowModel{}.QueryIsFollow(fromUserId, toUserId)
 	user.Id, user.Name, user.FollowCount, user.FollowerCount, user.IsFollow = userDB.Id, userDB.Username, userDB.FollowCount, userDB.FansCount, isFollow
 
-	return &CommentActionResponse{Id: comment.Id, User: &user, Content: comment.Content, CreateDate: comment.CreateAt}, nil
+	return &CommentActionResponse{Id: comment.Id, User: &user, Content: comment.Content, CreateDate: comment.CreateAt.Format("2006.01.02 15:04:05")}, nil
 }
