@@ -49,6 +49,8 @@ if [ ! -e "${APP_BUILD_FILE}" ]; then
   echo  " - the build result not find ! user : douyin-easy.sh - "
   exit 1
 fi
+# 拷贝编译后的文件
+cp -f "$APP_BUILD_FILE" "$DEPLOY_DIR"
 
 # 检查日志目录
 if [ ! -d "${LOG_DIR}" ]; then
