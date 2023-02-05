@@ -1,7 +1,7 @@
 package vo
 
 type VideoVo struct {
-	Id            string `json:"id"`            // 视频id
+	Id            uint64 `json:"id"`            // 视频id
 	Title         string `json:"title"`         // 标题
 	Author        UserVo `json:"author"`        // 作者
 	PlayUrl       string `json:"play_url"`      // 播放地址

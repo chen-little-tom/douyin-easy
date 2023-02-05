@@ -1,4 +1,24 @@
 definitions:
+  api.FeedResponse:
+    properties:
+      next_time:
+        type: integer
+      status_code:
+        type: integer
+      status_msg:
+        type: string
+      video_list:
+        items:
+          $ref: '#/definitions/vo.VideoVo'
+        type: array
+    type: object
+  api.Response:
+    properties:
+      status_code:
+        type: integer
+      status_msg:
+        type: string
+    type: object
   api.UserDetailResponse:
     properties:
       status_code:
@@ -37,9 +57,89 @@ definitions:
         description: 用户名称
         type: string
     type: object
+  vo.VideoVo:
+    properties:
+      author:
+        $ref: '#/definitions/vo.UserVo'
+        description: 作者
+      commentCount:
+        description: 评论数
+        type: integer
+      cover_url:
+        description: 视频封面地址
+        type: string
+      favoriteCount:
+        description: 收到的喜欢数目
+        type: integer
+      id:
+        description: 视频id
+        type: string
+      is_favorite:
+        description: 是否喜欢
+        type: boolean
+      play_url:
+        description: 播放地址
+        type: string
+      title:
+        description: 标题
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /douyin/feed/:
+    get:
+      consumes:
+      - application/json
+      description: 获取视频流
+      parameters:
+      - description: 最后一个视频时间戳
+        in: query
+        name: lastTime
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.FeedResponse'
+      summary: 获取视频流
+      tags:
+      - 基础模块
+  /douyin/publish/action/:
+    post:
+      consumes:
+      - application/json
+      description: 上传视频
+      parameters:
+      - description: 用户名
+        in: body
+        name: title
+        required: true
+        schema:
+          type: string
+      - description: 密码
+        in: body
+        name: token
+        required: true
+        schema:
+          type: string
+      - description: 视频文件
+        in: formData
+        name: data
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 上传视频
+      tags:
+      - 基础模块
   /douyin/user/:
     get:
       consumes:

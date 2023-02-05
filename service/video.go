@@ -68,7 +68,7 @@ func (vs videoService) Add(c *gin.Context) error {
 		return err
 	}
 	// 读取封面并存储
-	coverId, err := FileService.ReadAndSave(utils.StaticRoot+coverPath, user.Id)
+	coverId, err := FileService.ReadAndSave(coverPath, user.Id)
 	if err != nil {
 		return err
 	}
@@ -83,7 +83,7 @@ func (vs videoService) Add(c *gin.Context) error {
 
 // Feed 获取视频流
 func (vs videoService) Feed(lastTime time.Time, token string) ([]vo.VideoVo, time.Time, error) {
-	ret := make([]vo.VideoVo, 10)
+	var ret []vo.VideoVo
 	nextTime := time.Now()
 	videos, err := model.VideoModel.ListByTime(lastTime)
 	if err != nil {
@@ -95,8 +95,14 @@ func (vs videoService) Feed(lastTime time.Time, token string) ([]vo.VideoVo, tim
 		nextTime = videos[len(videos)-1].CreateAt
 	}
 
-	userIds := make([]uint64, len(videos))
-	fileIds := make([]uint64, len(videos)*2)
+	userIds := make([]uint64, 0)
+	fileIds := make([]uint64, 0)
+
+	for _, v := range videos {
+		userIds = append(userIds, v.AuthorId)
+		fileIds = append(fileIds, v.CoverId)
+		fileIds = append(fileIds, v.PlayId)
+	}
 
 	fileMap, err := FileService.ListByIdsMap(fileIds)
 	if err != nil {
@@ -104,7 +110,7 @@ func (vs videoService) Feed(lastTime time.Time, token string) ([]vo.VideoVo, tim
 	}
 	loginUser, err := UserService.GetLoginUser(token)
 	if err != nil {
-		return ret, nextTime, err
+		log.Printf("用户信息查询失败,err->%s\n", err)
 	}
 	userMap, err := UserService.DetailByIdsMap(userIds, loginUser)
 	if err != nil {

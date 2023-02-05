@@ -19,6 +19,18 @@ type feedApi struct{}
 
 var FeedApi feedApi
 
+// Publish 上传视频
+// @Summary 上传视频
+// @Schemes
+// @Description 上传视频
+// @Tags 基础模块
+// @Param title body string true "用户名"
+// @Param token body string true "密码"
+// @Param data formData file true "视频文件"
+// @Accept json
+// @Produce json
+// @Success 200 {object} Response
+// @Router /douyin/publish/action/ [post]
 func (fApi feedApi) Publish(c *gin.Context) {
 	err := service.VideoService.Add(c)
 	if err != nil {
@@ -34,6 +46,16 @@ func (fApi feedApi) Publish(c *gin.Context) {
 	})
 }
 
+// Feed 获取视频流
+// @Summary 获取视频流
+// @Schemes
+// @Description 获取视频流
+// @Tags 基础模块
+// @Param lastTime query int64 false "最后一个视频时间戳"
+// @Accept json
+// @Produce json
+// @Success 200 {object} FeedResponse
+// @Router /douyin/feed/ [get]
 func (fApi feedApi) Feed(c *gin.Context) {
 	lastTime := c.Query("lastTime")
 	var last time.Time

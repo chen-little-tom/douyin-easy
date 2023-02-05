@@ -3,6 +3,7 @@ package cache
 import (
 	"douyin-easy/model"
 	"encoding/json"
+	"errors"
 )
 
 type userRedisCache struct{}
@@ -59,7 +60,10 @@ func (uc userRedisCache) Serialize(user model.User) (string, error) {
 // DescSerialize 反序列化
 func (uc userRedisCache) DescSerialize(userJson interface{}) (model.User, error) {
 	user := model.User{}
-	data := string(userJson.([]uint8))
+	if userJson == nil {
+		return user, errors.New("用户信息为空，未登录")
+	}
+	data := string(userJson.([]byte))
 	err := json.Unmarshal([]byte(data), &user)
 	if err != nil {
 		return user, err

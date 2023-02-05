@@ -7,7 +7,7 @@ type videoModel struct{}
 var VideoModel videoModel
 
 type Video struct {
-	Id            string `json:"id" gorm:"column:id;primaryKey"`             // 视频id
+	Id            uint64 `json:"id" gorm:"column:id;primaryKey"`             // 视频id
 	Title         string `json:"title" gorm:"column:title"`                  // 标题
 	AuthorId      uint64 `json:"authorId" gorm:"column:author_id"`           // 作者
 	PlayId        uint64 `json:"playId" gorm:"column:play_id"`               // 播放地址

@@ -122,7 +122,7 @@ func (fs fileService) saveFile(file *multipart.FileHeader, c *gin.Context) (stri
 
 // getFileUrl 获取文件的网络地址
 func (fs fileService) getFileUrl(filePath string) string {
-	return utils.DeployRoot + filePath
+	return utils.DeployStaticRoot + filePath
 }
 
 // ListByIds 根据指定的id 批量查询数据
@@ -148,7 +148,7 @@ func (fs fileService) ListByIds(ids []uint64) ([]vo.FileVo, error) {
 
 // ListByIdsMap 根据指定的id 批量查询数据 封装为map
 func (fs fileService) ListByIdsMap(ids []uint64) (map[uint64]vo.FileVo, error) {
-	var ret map[uint64]vo.FileVo
+	ret := make(map[uint64]vo.FileVo, len(ids))
 	fileVos, err := fs.ListByIds(ids)
 	if err != nil {
 		return ret, err
@@ -162,8 +162,8 @@ func (fs fileService) ListByIdsMap(ids []uint64) (map[uint64]vo.FileVo, error) {
 // ReadAndSave 读取文件并存储信息到数据库
 // Return 返回数据库文件id
 func (fs fileService) ReadAndSave(filePath string, userId uint64) (uint64, error) {
-	println(filePath)
-	fileInfo, err := os.Stat(filePath)
+	localPath := utils.StaticRoot + filePath
+	fileInfo, err := os.Stat(localPath)
 	if err != nil {
 		log.Printf("读取文件信息失败,err->%s\n", err)
 		return 0, errors.New("读取文件信息失败")
