@@ -8,4 +8,5 @@ import (
 func initComment(r *gin.Engine) {
 	publish := r.Group("/douyin/comment/")
 	publish.POST("/action/", api.CommentAction)
+	publish.GET("/list/", api.CommentList)
 }

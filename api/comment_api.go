@@ -14,6 +14,12 @@ type ActionResponse struct {
 	Comment    *service.CommentActionResponse `json:"comment"`
 }
 
+type ListResponse struct {
+	StatusCode  int                               `json:"status_code"`
+	StatusMsg   string                            `json:"status_msg"`
+	CommentList *[]*service.CommentActionResponse `json:"comment_list"`
+}
+
 func CommentAction(c *gin.Context) {
 	token := c.Query("token")
 	videoIdParam := c.Query("video_id")
@@ -87,4 +93,26 @@ func CommentAction(c *gin.Context) {
 		return
 	}
 
+}
+
+func CommentList(c *gin.Context) {
+	videoIdParam := c.Query("video_id")
+	videoId, _ := strconv.ParseUint(videoIdParam, 10, 64)
+	commentList, err := service.GetCommentList(videoId)
+	if err != nil {
+		response := ListResponse{
+			StatusCode:  -1,
+			StatusMsg:   "获取评论列表失败",
+			CommentList: nil,
+		}
+		c.JSON(http.StatusOK, response)
+		return
+	}
+	response := ListResponse{
+		StatusCode:  0,
+		StatusMsg:   "Success",
+		CommentList: commentList,
+	}
+	c.JSON(http.StatusOK, response)
+	return
 }
