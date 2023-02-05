@@ -4,7 +4,7 @@ echo "-------------go build running----------------"
 # 项目名称
 PROJECT_NAME="douyin-easy"
 # 部署目录
-DEPLOY_DIR="../../"
+DEPLOY_DIR="./"
 # 获取项目不是路径的绝对路径
 
 # shellcheck disable=SC2164
@@ -18,7 +18,7 @@ APP_CONFIG_FILE="${CODE_DIR}/config/application.yaml"
 # 部署配置文件目录
 DEPLOY_APP_CONFIG_DIR="${DEPLOY_DIR}/config"
 # 编译后的执行文件名称
-BUILD_APP_NAME="douyin-easy"
+BUILD_APP_NAME="douyin-easy-server"
 # 日志目录
 LOG_DIR="${DEPLOY_DIR}/log"
 # 打包后的执行文件
