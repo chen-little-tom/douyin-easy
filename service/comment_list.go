@@ -22,7 +22,7 @@ func GetCommentList(videoId uint64) (*[]*CommentActionResponse, error) {
 			Id:         c.Id,
 			Content:    c.Content,
 			User:       &user,
-			CreateDate: c.CreateAt,
+			CreateDate: c.CreateAt.Format("2006.01.02 15:04:05"),
 		}
 		commentList = append(commentList, &comment)
 	}
