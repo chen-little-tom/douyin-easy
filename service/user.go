@@ -8,6 +8,7 @@ import (
 	"douyin-easy/vo"
 	"errors"
 	"log"
+	"strings"
 )
 
 type userService struct{}
@@ -114,6 +115,7 @@ func (us userService) DetailByIdsMap(userIds []uint64, loginUser model.User) (ma
 
 // GetLoginUser 获取当前登录用户信息
 func (us userService) GetLoginUser(token string) (model.User, error) {
+	strings.ReplaceAll(token, " ", "+")
 	user, err := cache.UserCache.Get(token)
 	if err != nil {
 		log.Printf("获取当前登录用户信息失败,err->%s\n", err)
