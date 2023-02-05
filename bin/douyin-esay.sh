@@ -93,7 +93,7 @@ fi
 
 # 检查进程及其创建pid文件
 # shellcheck disable=SC2009
-N_PID=$(ps aux | grep "${BUILD_APP_NAME}" | grep -v grep|awk 'print $2');
+N_PID=$(ps aux | grep "${BUILD_APP_NAME}" | grep -v grep|awk '{print $2}');
 if [ -n "$N_PID" ]; then
   #pid 文件
   echo "$N_PID" > "./pid.txt";
