@@ -91,6 +91,9 @@ if [ ! -e "./log.sh" ]; then
   chmod +x "./log.sh"
 fi
 
+# 启动
+nohup "./${BUILD_APP_NAME}" > "${LOG_NAME}" 2>&1 &
+
 # 检查进程及其创建pid文件
 # shellcheck disable=SC2009
 N_PID=$(ps aux | grep "${BUILD_APP_NAME}" | grep -v grep|awk '{print $2}');
@@ -103,7 +106,7 @@ if [ -n "$N_PID" ]; then
   # shellcheck disable=SC2129
   echo "kill -9 ${N_PID}" >> "./stop.sh"
   echo "sleep 2" >> "./stop.sh"
-  ehco "rm -rf ./pid.txt" >> "./stop.sh"
+  echo "rm -rf ./pid.txt" >> "./stop.sh"
   echo "rm -rf ./stop.sh" >> "./stop.sh"
 
   chmod +x "./stop.sh"
