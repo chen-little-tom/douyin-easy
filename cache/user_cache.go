@@ -13,7 +13,7 @@ func (uc userRedisCache) Get(key string) (model.User, error) {
 	var user model.User
 	redisKey := uc.getPrefix() + key
 	u, err := Conn.Do("Get", redisKey)
-	if err != nil {
+	if err != nil || u == nil { //此处存在bug，当 u == nil 时后续的反序列化出错，已添加对应逻辑
 		return user, err
 	}
 	user, err = uc.DescSerialize(u)

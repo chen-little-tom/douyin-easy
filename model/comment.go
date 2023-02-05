@@ -11,11 +11,11 @@ type CommentModel struct{}
 var commentModel CommentModel
 
 type Comment struct {
-	Id         int64     `json:"commentId" gorm:"primary_key;AUTO_INCREMENT"` // 评论id
-	FatherId   int64     `json:"fatherId"`                                    // 评论父id
-	ToUserId   int64     `json:"toUserId"`                                    // 评论指向用户id
-	VideoId    int64     `json:"videoId"`                                     // 评论指向视频id
-	FromUserId int64     `json:"fromUserId"`                                  // 评论者id
+	Id         uint64    `json:"commentId" gorm:"primary_key;AUTO_INCREMENT"` // 评论id
+	FatherId   uint64    `json:"fatherId"`                                    // 评论父id
+	ToUserId   uint64    `json:"toUserId"`                                    // 评论指向用户id
+	VideoId    uint64    `json:"videoId"`                                     // 评论指向视频id
+	FromUserId uint64    `json:"fromUserId"`                                  // 评论者id
 	Content    string    `json:"content"`                                     // 评论内容
 	CreateAt   time.Time `json:"createAt" gorm:"column:create_at"`            // 创建时间
 }
@@ -49,7 +49,7 @@ func (c CommentModel) AddCommentAndUpdateCount(comment *Comment) error {
 }
 
 // DeleteCommentAndUpdateCountById 删除评论并减少计数
-func (c CommentModel) DeleteCommentAndUpdateCountById(commentId, videoId int64) error {
+func (c CommentModel) DeleteCommentAndUpdateCountById(commentId, videoId uint64) error {
 	return DB.Transaction(func(tx *gorm.DB) error {
 		//删除评论
 		if err := tx.Exec("DELETE FROM tb_comment WHERE id= ?", commentId).Error; err != nil {
@@ -64,7 +64,7 @@ func (c CommentModel) DeleteCommentAndUpdateCountById(commentId, videoId int64) 
 }
 
 // QueryCommentById 按照评论id查询评论
-func (c CommentModel) QueryCommentById(commentId int64, comment *Comment) error {
+func (c CommentModel) QueryCommentById(commentId uint64, comment *Comment) error {
 	if comment == nil {
 		return errors.New("QueryCommentById : null pointer exception")
 	}
@@ -72,7 +72,7 @@ func (c CommentModel) QueryCommentById(commentId int64, comment *Comment) error 
 }
 
 // QueryCommentListByVideoId 按照视频id查询评论
-func (c CommentModel) QueryCommentListByVideoId(videoId int64, comments *[]*Comment) error {
+func (c CommentModel) QueryCommentListByVideoId(videoId uint64, comments *[]*Comment) error {
 	if comments == nil {
 		return errors.New("QueryCommentListByVideoId : null pointer exception")
 	}

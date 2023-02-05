@@ -20,6 +20,7 @@ func init() {
 
 	initUser(router)
 	initFeed(router)
+	initComment(router)
 
 	Router = router
 }

@@ -27,3 +27,10 @@ func (vm videoModel) ListByTime(lastTime time.Time) ([]Video, error) {
 	tx.Where("create_at < ?", lastTime).Limit(10).Find(&rows)
 	return rows, tx.Error
 }
+
+func (vm videoModel) GetAuthorIdByVideoId(videoId uint64) (uint64, error) {
+	var video Video
+	tx := DB.Model(Video{})
+	tx.Where("id = ?", videoId).Find(&video)
+	return video.AuthorId, nil
+}
