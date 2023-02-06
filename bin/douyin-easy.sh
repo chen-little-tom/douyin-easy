@@ -118,14 +118,5 @@ else
 fi
 
 echo " run ${BUILD_APP_NAME} , start success ! -";
-ehco "------------------ go build end -----------------------------"
+echo "------------------ go build end -----------------------------"
 tail -f -n 100 ${LOG_NAME}
-
-
-
-
-
-
-
-
-
