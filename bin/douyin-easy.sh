@@ -78,7 +78,7 @@ fi
 # 删除pid文件
 if [ -e "./pid.txt" ]; then
   PID=$(cat "./pid.txt")
-  ehco " - kill pid ${PID} -";
+  echo " - kill pid ${PID} -";
   kill -9 $PID
   sleep 2
   rm -f "./pid.txt"
