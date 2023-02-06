@@ -63,7 +63,7 @@ if [ ! -d "$DEPLOY_APP_CONFIG_DIR" ]; then
   echo " - mkdir ${DEPLOY_APP_CONFIG_DIR}"
   mkdir "$DEPLOY_APP_CONFIG_DIR"
 fi
-cp -f "${APP_CONFIG_FILE}" "${DEPLOY_APP_CONFIG_DIR}/config"
+cp -f "${APP_CONFIG_FILE}" "${DEPLOY_APP_CONFIG_DIR}/"
 
 # 检查拷贝是否成功
 # shellcheck disable=SC2164
