@@ -34,3 +34,10 @@ func (vm videoModel) GetAuthorIdByVideoId(videoId uint64) (uint64, error) {
 	tx.Where("id = ?", videoId).Find(&video)
 	return video.AuthorId, nil
 }
+
+func (vm videoModel) ListByUser(userid uint64) ([]Video, error) {
+	var videos []Video
+	tx := DB.Model(&Video{})
+	tx.Where("author_id = ?", userid).Find(&videos)
+	return videos, tx.Error
+}

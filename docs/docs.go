@@ -97,6 +97,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/douyin/publish/list/": {
+            "get": {
+                "description": "获取投稿视频",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "基础模块"
+                ],
+                "summary": "获取投稿视频",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.VideoListResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/douyin/user/": {
             "get": {
                 "description": "用户详情",
@@ -278,6 +310,23 @@ const docTemplate = `{
                 }
             }
         },
+        "api.VideoListResponse": {
+            "type": "object",
+            "properties": {
+                "status_code": {
+                    "type": "integer"
+                },
+                "status_msg": {
+                    "type": "string"
+                },
+                "video_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/vo.VideoVo"
+                    }
+                }
+            }
+        },
         "vo.UserVo": {
             "type": "object",
             "properties": {
@@ -324,7 +373,7 @@ const docTemplate = `{
                 },
                 "id": {
                     "description": "视频id",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "is_favorite": {
                     "description": "是否喜欢",

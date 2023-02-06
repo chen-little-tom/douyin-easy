@@ -15,6 +15,11 @@ type FeedResponse struct {
 	NextTime  int64        `json:"next_time,omitempty"`
 }
 
+type VideoListResponse struct {
+	Response
+	VideoList []vo.VideoVo `json:"video_list"`
+}
+
 type feedApi struct{}
 
 var FeedApi feedApi
@@ -87,6 +92,38 @@ func (fApi feedApi) Feed(c *gin.Context) {
 			StatusMsg:  "获取视频流成功",
 		},
 		NextTime:  nextTime.Unix(),
+		VideoList: videoVos,
+	})
+}
+
+// List 获取投稿视频
+// @Summary 获取投稿视频
+// @Schemes
+// @Description 获取投稿视频
+// @Tags 基础模块
+// @Param token query string true "用户token"
+// @Accept json
+// @Produce json
+// @Success 200 {object} VideoListResponse
+// @Router /douyin/publish/list/ [get]
+func (fApi feedApi) List(c *gin.Context) {
+	token := c.Query("token")
+
+	videoVos, err := service.VideoService.List(token)
+	if err != nil {
+		c.JSON(http.StatusOK, VideoListResponse{
+			Response: Response{
+				StatusCode: 0,
+				StatusMsg:  err.Error(),
+			},
+		})
+		return
+	}
+	c.JSON(http.StatusOK, VideoListResponse{
+		Response: Response{
+			StatusCode: 0,
+			StatusMsg:  "获取投稿视频成功",
+		},
 		VideoList: videoVos,
 	})
 }

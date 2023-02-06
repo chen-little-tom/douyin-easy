@@ -3,6 +3,7 @@ package service
 import (
 	"douyin-easy/model"
 	"douyin-easy/utils"
+	"douyin-easy/utils/user_token"
 	"douyin-easy/vo"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -136,4 +137,49 @@ func (vs videoService) Feed(lastTime time.Time, token string) ([]vo.VideoVo, tim
 	}
 
 	return ret, nextTime, nil
+}
+
+// List 查询用户所有投稿过的视频
+func (vs videoService) List(token string) ([]vo.VideoVo, error) {
+	ret := make([]vo.VideoVo, 0)
+	userid, err := user_token.GetUserIdByToken(token)
+	if err != nil {
+		log.Printf("获取当前登录用户信息失败,err->%s\n", err)
+		return ret, errors.New("获取当前登录用户失败")
+	}
+	videos, err := model.VideoModel.ListByUser(userid)
+	if err != nil {
+		log.Printf("查询用户投稿的视频失败,err->%s\n", err)
+		return ret, errors.New("查询用户投稿的视频失败")
+	}
+
+	fileIds := make([]uint64, 0)
+	for _, v := range videos {
+		fileIds = append(fileIds, v.CoverId, v.PlayId)
+	}
+	fileMap, err := FileService.ListByIdsMap(fileIds)
+	if err != nil {
+		return ret, err
+	}
+	userVo, err := UserService.Detail(userid, token)
+	if err != nil {
+		return ret, err
+	}
+	for _, v := range videos {
+		var video vo.VideoVo
+		video.Title = v.Title
+		video.Id = v.Id
+		video.CommentCount = v.CommentCount
+		video.Author = userVo
+		video.IsFavorite = false
+		video.FavoriteCount = v.FavoriteCount
+		if fileInfo, ok := fileMap[v.PlayId]; ok {
+			video.PlayUrl = fileInfo.FileUrl
+		}
+		if fileInfo, ok := fileMap[v.CoverId]; ok {
+			video.CoverUrl = fileInfo.FileUrl
+		}
+		ret = append(ret, video)
+	}
+	return ret, nil
 }

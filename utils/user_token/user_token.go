@@ -36,15 +36,15 @@ func GetUserToken(userId uint64) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("%s-%s", prefix, *rsaEncode), nil
+	return fmt.Sprintf("%s@%s", prefix, *rsaEncode), nil
 }
 
 // GetUserIdByToken 根据token 获取userId
 // user_token 令牌
 func GetUserIdByToken(token string) (uint64, error) {
 	// 处理rsa传输过程中 + -> " "
-	strings.ReplaceAll(token, " ", "+")
-	index := strings.LastIndex(token, "-")
+	token = strings.ReplaceAll(token, " ", "+")
+	index := strings.LastIndex(token, "@")
 	s := token[index+1:]
 	decode, err := ras_util.RSADecode(s)
 	if err != nil {
