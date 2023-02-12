@@ -1,13 +1,15 @@
 package model
 
-import "testing"
+import (
+	"testing"
+)
 
 var followListResult = []*Follow{
-	&Follow{
+	{
 		UserId:   100,
 		FollowId: 101,
 	},
-	&Follow{
+	{
 		UserId:   100,
 		FollowId: 102,
 	},
@@ -30,6 +32,21 @@ func TestFollowModel_QueryFollowById(t *testing.T) {
 		}
 		if follow.FollowId != followListResult[i].FollowId {
 			t.Errorf("QueryFollowById is fail, followId is wrong !")
+		}
+	}
+}
+
+func TestFollowModel_QueryFansById(t *testing.T) {
+	var followList []*Follow
+	if err, _ := followModel.QueryFansById(followListResult[0].FollowId, &followList); err != nil {
+		t.Errorf("QueryFansById is fail, %v", err)
+	}
+	for i, follow := range followList {
+		if follow.UserId != followListResult[i].UserId {
+			t.Errorf("QueryFansById is fail, userId is wrong !")
+		}
+		if follow.FollowId != followListResult[i].FollowId {
+			t.Errorf("QueryFansById is fail, followId is wrong !")
 		}
 	}
 }

@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -26,14 +27,44 @@ func NewFollowModel() *FollowModel {
 
 // AddFollowAndCount 对用户点赞并更新计数
 func (f FollowModel) AddFollowAndCount(userId, followId uint64) error {
-
+	//执行事务
+	return DB.Transaction(func(tx *gorm.DB) error {
+		fol := Follow{FollowId: followId, UserId: userId, CreateAt: time.Now()}
+		if err := tx.Create(fol).Error; err != nil {
+			return err
+		}
+		//增加点赞计数
+		if err := tx.Exec("UPDATE tb_user v SET v.follow_count = v.follow_count + 1 WHERE v.id = ?", userId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("UPDATE tb_user v SET v.fans_count = v.fans_count + 1 WHERE v.id = ?", followId).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 	return nil
 }
 
 // CancelFollowAndCount 取消点赞并更新计数
 func (f FollowModel) CancelFollowAndCount(userId, followId uint64) error {
 
+	return DB.Transaction(func(tx *gorm.DB) error {
+		//执行事务
+		fol := Follow{FollowId: followId, UserId: userId, CreateAt: time.Now()}
+		if err := tx.Create(fol).Error; err != nil {
+			return err
+		}
+		//增加点赞计数
+		if err := tx.Exec("UPDATE tb_user v SET v.follow_count = v.follow_count - 1 WHERE v.id = ?", userId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("UPDATE tb_user v SET v.fans_count = v.fans_count - 1 WHERE v.id = ?", followId).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 	return nil
+
 }
 
 // QueryFollowById 根据用户id查询该用户关注列表
@@ -48,9 +79,14 @@ func (f FollowModel) QueryFollowById(userId uint64, follow *[]*Follow) error {
 }
 
 // QueryFansById 根据用户id查询该用户的粉丝列表
-func (f FollowModel) QueryFansById(userId uint64) error {
-
-	return nil
+func (f FollowModel) QueryFansById(userId uint64, fans *[]*Follow) (error, error) {
+	if fans == nil {
+		return errors.New("QueryFansById : null pointer exception"), nil
+	}
+	if err := DB.Model(&Follow{}).Where("follow_id = ?", userId).Find(fans).Error; err != nil {
+		return err, nil
+	}
+	return nil, nil
 }
 
 func (f FollowModel) QueryIsFollow(userId, followId uint64) (bool, error) {
